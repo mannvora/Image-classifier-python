@@ -21,9 +21,8 @@ def get_queue_url(queue_name):
 
 request_queue_name = f'{ASU_ID}-req-queue'
 response_queue_name = f'{ASU_ID}-resp-queue'
-
-request_queue_url = get_queue_url(request_queue_name)
-response_queue_url = get_queue_url(response_queue_name)
+request_queue_url = f'https://sqs.us-east-1.amazonaws.com/967211778521/1231868809-req-queue'
+response_queue_url = f'https://sqs.us-east-1.amazonaws.com/967211778521/1231868809-resp-queue'
 responses = defaultdict(str)
 
 def upload_to_s3(bucket, key, data):

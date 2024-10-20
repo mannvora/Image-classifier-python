@@ -130,3 +130,4 @@ def manage_scaling():
 
 if __name__ == "__main__":
     manage_scaling()
+
