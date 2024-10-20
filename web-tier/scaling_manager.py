@@ -123,7 +123,7 @@ def manage_scaling():
                     scale_in(current_instance_count, 20)
 
             # Wait before checking again
-            time.sleep(15)  # Wait 10 seconds before checking again
+            time.sleep(10)  # Wait 10 seconds before checking again
             
         except Exception as e:
             print(f"Error managing scaling: {e}")
