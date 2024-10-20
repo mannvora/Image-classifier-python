@@ -86,7 +86,7 @@ def scale_in(current_instances, target_instances):
 def manage_scaling():
     while True:
         try:
-            num_messages = int(get_queue_metrics(request_queue_name))
+            num_messages = int(get_queue_metrics(f'https://sqs.us-east-1.amazonaws.com/967211778521/1231868809-req-queue'))
             current_instance_count = len(get_running_instances())
 
             print(f'Approximate Number of Messages: {num_messages}')
