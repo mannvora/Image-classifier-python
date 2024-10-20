@@ -58,7 +58,7 @@ def launch_instance(instance_number):
         MinCount=1,
         MaxCount=1,
         KeyName=key_name,
-        SecurityGroupIds = ['sg-0b01ce6860cd4bdf1'],
+        SecurityGroupIds = ['sg-06207987a2ce72c67'],
         TagSpecifications=[{
             'ResourceType': 'instance',
             'Tags': [{'Key': 'Name', 'Value': instance_name}]
