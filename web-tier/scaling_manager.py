@@ -1,12 +1,12 @@
 import boto3
 import time
 
-ASU_ID = '1231611409'
+ASU_ID = '1231868809'
 app_instance_name_prefix = 'app-tier-instance-'
 max_instances = 20
-ami_id = 'ami-0135cc798a9db798d'  # Update with your AMI ID
+ami_id = 'ami-0248ff7b537f13cf2'  # Update with your AMI ID
 instance_type = 't2.micro'
-key_name = 'cc-proj-2-test'  # Replace with your EC2 key pair
+key_name = 'project2part2'  # Replace with your EC2 key pair
 
 # Initialize SQS, EC2 clients
 sqs = boto3.client('sqs')
