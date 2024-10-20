@@ -9,8 +9,8 @@ app = Flask(__name__)
 # Set up SQS
 ASU_ID = '1231868809'  # Replace with your ASU ID
 input_bucket = f"{ASU_ID}-in-bucket"
-request_queue_url = f'https://sqs.us-east-1.amazonaws.com/597088032987/{ASU_ID}-req-queue'
-response_queue_url = f'https://sqs.us-east-1.amazonaws.com/597088032987/{ASU_ID}-resp-queue'
+request_queue_url = f'https://sqs.us-east-1.amazonaws.com/967211778521/1231868809-req-queue'
+response_queue_url = f'https://sqs.us-east-1.amazonaws.com/967211778521/1231868809-resp-queue'
 
 sqs = boto3.client('sqs')
 s3 = boto3.client('s3')
