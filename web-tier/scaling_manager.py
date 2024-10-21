@@ -115,6 +115,8 @@ def scaler():
                 elif total_available_messages <= 50 and current_instance_count > 20:
                     scale_in(current_instance_count, 20)
             
+            time.sleep(10)
+            
         except Exception as e:
             print(f"Error scaling the instances: {e}")
 
