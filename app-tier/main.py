@@ -7,8 +7,7 @@ from PIL import Image
 import torch
 import io
 
-# S3 and SQS Configuration
-ASU_ID = "1231868809"  # Replace with your ASU ID
+ASU_ID = "1231868809" 
 INPUT_BUCKET = f"{ASU_ID}-in-bucket"
 OUTPUT_BUCKET = f"{ASU_ID}-out-bucket"
 
@@ -29,7 +28,7 @@ s3 = boto3.client('s3')
 resnet = InceptionResnetV1(pretrained='vggface2').eval()
 mtcnn = MTCNN(image_size=240, margin=0, min_face_size=20)
 
-def process_image(image_bytes):
+def run_deep_learning_model(image_bytes):
     img = Image.open(io.BytesIO(image_bytes))
     face, prob = mtcnn(img, return_prob=True) 
     emb = resnet(face.unsqueeze(0)).detach() 
@@ -57,11 +56,10 @@ def download_from_s3(bucket, key):
 
 def main():
     while True:
-        # Receive a message from the request queue
         response = sqs.receive_message(
             QueueUrl=request_queue_url,
             MaxNumberOfMessages=1,
-            WaitTimeSeconds=10,  # Long polling
+            WaitTimeSeconds=10, 
             MessageAttributeNames=['All']
 
         )
@@ -71,22 +69,17 @@ def main():
             receipt_handle = message['ReceiptHandle']
             message_body = message['Body']
 
-            # Extract message attributes
             request_id = message_body
             filename = message['MessageAttributes']['filename']['StringValue']
 
-            # Read image from s3
             s3_response = s3.get_object(Bucket=INPUT_BUCKET, Key=filename)
             image_data = s3_response['Body'].read()
 
-            # Process the image using the model
-            classification_result = process_image(image_data)
+            classification_result = run_deep_learning_model(image_data)
 
             if classification_result:
-                # Store the classification result in S3 using the image name (without extension) as the key
-                output_key = f"{filename.split('.')[0]}"  # e.g., test_00
+                output_key = f"{filename.split('.')[0]}"  
                 upload_to_s3(OUTPUT_BUCKET, output_key, classification_result.encode('utf-8'))
-                # Send result back to the response queue
                 sqs.send_message(
                     QueueUrl=response_queue_url,
                     MessageBody=classification_result,
@@ -97,13 +90,12 @@ def main():
                         }
                     }
                 )
-            # Delete the processed message from the request queue
+
             sqs.delete_message(
                 QueueUrl=request_queue_url,
                 ReceiptHandle=receipt_handle
             )
 
-        # Sleep for a while before checking again
         time.sleep(5)
 
 if __name__ == '__main__':

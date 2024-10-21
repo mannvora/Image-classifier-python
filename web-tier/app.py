@@ -6,8 +6,7 @@ from collections import defaultdict
 
 app = Flask(__name__)
 
-# Set up SQS
-ASU_ID = '1231868809'  # Replace with your ASU ID
+ASU_ID = '1231868809'
 input_bucket = f"{ASU_ID}-in-bucket"
 request_queue_url = f'https://sqs.us-east-1.amazonaws.com/967211778521/1231868809-req-queue'
 response_queue_url = f'https://sqs.us-east-1.amazonaws.com/967211778521/1231868809-resp-queue'
@@ -15,14 +14,8 @@ response_queue_url = f'https://sqs.us-east-1.amazonaws.com/967211778521/12318688
 sqs = boto3.client('sqs')
 s3 = boto3.client('s3')
 
-def get_queue_url(queue_name):
-    response = sqs.get_queue_url(QueueName=queue_name)
-    return response['QueueUrl']
-
 request_queue_name = f'{ASU_ID}-req-queue'
 response_queue_name = f'{ASU_ID}-resp-queue'
-request_queue_url = f'https://sqs.us-east-1.amazonaws.com/967211778521/1231868809-req-queue'
-response_queue_url = f'https://sqs.us-east-1.amazonaws.com/967211778521/1231868809-resp-queue'
 responses = defaultdict(str)
 
 def upload_to_s3(bucket, key, data):
@@ -31,7 +24,6 @@ def upload_to_s3(bucket, key, data):
     
 @app.route('/', methods=['POST'])
 def handle_image_upload():
-    # Get the image file from the request
     if 'inputFile' not in request.files:
         return "No inputFile part in the request", 400
     
@@ -40,12 +32,10 @@ def handle_image_upload():
         return "No file selected", 400
 
     filename = file.filename
-    # Generate a unique request ID for tracking
+
     request_id = str(uuid.uuid4())
     print("filename: " + filename)
-    # Send the image to SQS Request Queue
-    
-    # Upload the file to S3
+
     try:
         upload_to_s3(input_bucket, filename, file)
         print(f"File uploaded to S3: {filename}")
@@ -63,7 +53,6 @@ def handle_image_upload():
         }
     )
     
-    # Wait for response from SQS Response Queue
     while True:
         response = sqs.receive_message(
             QueueUrl=response_queue_url,
